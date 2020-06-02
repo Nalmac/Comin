@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Comin{% endblock %}
+
+{% block navbar %}
+	<li class="nav-item">
+		<a type="button" data-toggle="modal" data-target="#login" class="nav-link">Connexion</a>
+	</li>
+	<li class="nav-item">
+		<a type="button" data-toggle="modal" data-target="#register" class="nav-link">Inscription</a>
+	</li>
+{% endblock %}
+
+{% block body %}
+	{% if registered %}
+		<div class="alert alert-success alert-dismissible fade show">
+			<strong>Super !</strong> Vous êtes inscrit, connectez-vous maintenant avec vos identifiants
+			 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			    <span aria-hidden="true">&times;</span>
+			  </button>
+		</div>
+	{% endif %}
+	<h1 align="center" class="display-2">Comin, c'est quoi ?</h1>
+	<br>
+	<div class="row">
+		<div class="col-lg-6">
+			<div class="text-center shadow-lg p-3">
+				<img src="https://image.flaticon.com/icons/svg/2521/2521939.svg" class="w-25">
+				<h2>Un réseau social...</h2>
+				<br>
+				<p class="lead">Comin est un réseau social indépendant, mené par un seul développeur (moi). Comme tous les réseaux sociaux, il permet d'échanger avec les gens, où qu'ils soient, de poster photos, vidéos et audios depuis votre ordinateur, votre téléphone ou votre tablette. Comin dispose cependant d'autres spécificités.</p>
+				<br>
+				<br>
+				<br>
+				<br>
+			</div>
+		</div>
+		<br>
+		<div class="col-lg-6">
+			<div class="text-center shadow-lg p-3">
+				<img src="https://image.flaticon.com/icons/svg/2521/2521556.svg" class="w-25">
+				<h2>...Mais pas n'importe lequel !</h2>
+				<br>
+				<p class="lead">Tout d'abord, Comin ne pompe pas vos données. Quoique vous postiez dessus, vos données ne seront pas vendues ni transmises. A l'heure de la collecte des données, Comin s'érige en rempart et vous offre une réelle tranquilité. De plus, Comin est utilisable pour tous les domaines : professionnel, scolaire ou personnel. Il est possible d'avoir un compte sur chacune de ces déclinaisons de Comin, et il est également possible de lier ces comptes entre eux.</p>
+				<br>
+			</div>
+		</div>
+	</div>
+	<br>
+	<br>
+	<div class="row">
+		<div class="col-12">
+			<div class="text-center shadow-lg p-3">
+				<img src="https://image.flaticon.com/icons/svg/2413/2413270.svg" class="w-25">
+				<h2>Actualités</h2>
+				<p class="lead">Pour l'instant, cette rubrique est vide. Mais dès qu'elle sera en fonctionnement, elle présentera les différentes actus liées à Comin.</p>
+				<br>
+			</div>
+		</div>
+	</div>
+	
+	<br>
+	<br>
+
+	<div class="row">
+		<div class="col-12">
+			<div class="text-center shadow-lg p-3">
+				<img src="https://image.flaticon.com/icons/svg/2413/2413303.svg" alt="Parler" class="w-25">
+				<h2>Me contacter</h2>
+				<p class="lead">Ce réseau vous plaît et vous aimeriez que je développe votre idée de site web ? Vous avez une remarque, une suggestion ?</p>
+				<p class="lead" align="center"><strong>Dites-le moi !</strong></p>
+				<a href="" class="btn btn-outline-secondary disabled btn-block">@s.web_dev sur Instagram</a>
+				<a href="mailto:simon.dev.maciag@gmail.com" class="btn btn-outline-secondary btn-block">Envoyez-moi un mail ! </a>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade p-3" id="login" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2> <img src="https://image.flaticon.com/icons/svg/2521/2521966.svg" class="w-25 d-inline
+						">Connexion</h2>
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form method="post" action="{{ path('home_login')}}">
+						<div class="form-group">
+							<label>Email</label>
+							<input type="email" class="form-control" name="_username" placeholder="exemple@123.com">
+						</div>
+						<div class="form-group">
+							<label>Mot de passe</label>
+							<input type="password" class="form-control" name="_password" placeholder="Votre mot de passse">
+						</div>
+						<br>
+						<button type="submit" class="btn btn-outline-primary btn-block">Connexion</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade p-3" id="register" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2><img src="https://image.flaticon.com/icons/svg/2521/2521826.svg" class="w-25 d-inline">Inscription</h2>
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					{{ form_start(form)}}
+						{{ form_row(form.username, {
+							'attr' : {
+								'class' : 'form-control',
+								'placeholder' : "Votre pseudo"
+							},
+							'label' : "Nom d'utilisateur"
+						})}}
+						<br>
+						{{ form_row(form.email, {
+								'attr' : {
+									'class' : 'form-control',
+									'placeholder' : "exemple@123.com"
+							},
+							'label' : "Email"
+						})}}
+						<br>
+						{{ form_row(form.password, {
+								'attr' : {
+									'class' : 'form-control',
+									'placeholder' : "Votre mot de passe"
+							},
+							'label' : "Mot de passe"
+						})}}
+						<br>
+						{{ form_row(form.confirmPassword, {
+								'attr' : {
+									'class' : 'form-control',
+									'placeholder' : "Retapez votre mot de passe"
+							},
+							'label' : "Confirmation du mot de passe"
+						})}}
+						{{ form_row(form.avatar, {
+								'attr' : {
+									'class' : 'd-none',
+									'placeholder' : "Retapez votre mot de passe"
+							}
+						})}}
+						<br>
+						<button type="submit" class="btn btn-outline-primary btn-block">S'inscrire</button>
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<br>
+{% endblock %}
+{% block class %}container shadow-md p-5{% endblock %}

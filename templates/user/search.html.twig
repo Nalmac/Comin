@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rechercher un utilisateur{% endblock %}
+
+{% block extra %}
+	<div class="text-inline d-inline dropdown">
+		<span>{{ app.user.username }}  </span>
+		<a class="bg-transparent" role="button" href="{{ path("user_myaccount") }}" style="border: none">
+			<img src="{{ app.user.avatar}}" alt="" class="d-inline rounded-circle" style="width: 5em">
+		</a>
+	</div>
+{% endblock %}
+
+{% block class %}container{% endblock %}
+
+{% block body %}
+	<br>
+	<br>
+	{{ form_start(form) }}
+		<div class="row p-3 shadow-lg">
+			<div class="col-lg-9">
+				{{ form_row(form.username, {
+					'attr' : {
+						'class' : 'form-control',
+						'placeholder' : "Le nom d'utilisateur à rechercher"
+					}
+				}) }}
+			</div>
+			<br>
+			<br>
+			<div class="col-lg-3">
+				<button class="btn btn-outline-primary btn-block w-100">Rechercher</button>
+			</div>
+		</div>
+	{{ form_end(form) }}
+	{% if users %}
+		<div class="users shadow-lg overflow-auto p-3">
+			{% for user in users %}
+				<div class="m-2">
+					<img class="img-fluid w-25 d-inline" src="{{ user.avatar }}">
+					<a href="{{ path('user', {'id' : user.id}) }}" type="button" class="d-block text-dark"><h1>{{ user.username }}</h1></a>
+				</div>
+			{% endfor %}
+		</div>
+	{% else %}
+		<div class="text-center shadow-lg p-5">
+			<p class="lead">
+				Aucun résultat
+			</p>
+		</div>
+	{% endif %}
+{% endblock %}

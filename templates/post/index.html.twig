@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+
+
+
+{% block extra %}
+	<div class="text-inline d-inline dropdown">
+		<span>{{ app.user.username }}  </span>
+		<a class="bg-transparent" role="button" href="{{ path("user_myaccount") }}" style="border: none">
+			<img src="{{ app.user.avatar}}" alt="" class="d-inline rounded-circle" style="width: 5em">
+		</a>
+	</div>
+{% endblock %}
+{% block title %}Poster{% endblock %}
+
+{% block class %}container-fluid w-75{% endblock %}
+
+{% block body %}
+	
+	{{ form_start(form) }}
+		<div class="row">
+			<div id="content" class="col-lg m-3 shadow-lg p-3">
+				<img id="displayImg" src="" class="d-none">
+				<audio  id="displayAudio" controls="" src="" class="d-none" style="width: 100%; height: 4em"></audio>
+				<video id="displayVideo" src="" controls="" class="d-none flex-fill" style="width: 100% !important; height: auto !important;"></video>
+				{{ form_row(form.path, {'attr' : { 'class' : 'd-none', 'required' : 'true'}})}}
+				<label class="btn btn-outline-primary btn-block" for="post_path">Choisir un fichier</label>
+			</div>
+			<br>
+			<div class="col-lg m-3 shadow-lg p-3">
+				{{ form_row(form.description, {'attr' : {'class' : 'form-control', 'placeholder' : 'Ajoutez une description', 'required' : 'true'}})}}
+			</div>
+		</div>
+		<br>
+		<br>
+		<button class="btn btn-outline-success btn-block">Poster</button>
+	{{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript" src="/assets/js/displayPosts.js"></script>
+{% endblock %}

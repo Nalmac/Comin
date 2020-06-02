@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Votre compte{% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col"></div>
+		<div class="col-lg-4 m-2 shadow-lg p-3">
+			<div class="row">
+				<div class="col-4 align-middle" align="center">
+					<br>
+					<img class="img-fluid img-thumbnail w-50 " src="{{ app.user.avatar}}">
+				</div>
+				<div class="col-8">
+					<h2>{{ app.user.username }} </h2>
+					<div class="row">
+						<div class="col">
+							<span>{{ app.user.posts | length}} publications</span>
+						</div>
+						<div class="col">
+							<span>{{ app.user.follows | length}} abonnements</span>
+						</div>
+						<div class="col">
+							<span>{{ app.user.followers | length}} abonnés</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row p-5">
+				<p class="lead">
+					{{ app.user.description }}
+				</p>
+			</div>
+		</div>
+		<div class="col-lg-7 m-2 shadow-lg p-3 overflow-auto" align="center" style="height: 86vh">
+			{% if app.user.posts %}
+				{% for post in app.user.posts|reverse%}
+					<div class="card">
+						<div class="card-header card-header-primary">
+							{% set type = post.type|split("/") %}
+							{% set format = type[1]%}
+							{% if type[0] == "video" %}
+								<video controls="" class="video-js vjs-theme-city" preload="auto" data-setup="{}">
+									<source src="{{ post.path }}" type="video/{{ format }}">
+									Votre navigateur ne semble pas supporter l'élement vidéo ! Désolé...
+								</video>
+							{% elseif type[0] == "image" %}
+								<img class="img-fluid" src="{{ post.path }}">
+
+							{% elseif type[0] == "audio" %}
+									<audio controls="" style="width: 100% !important;">
+										<source src="{{ post.path }}" type="audio/{{ format }}">
+									</audio>
+								{% endif %}
+							
+						</div>
+						<div class="card-body">
+							<h4>{{ post.user.username }}</h4>
+							<p class="lead">{{ post.description }}</p>
+							<span class="like-display badge badge-info" id="{{ post.id }}likes">{{ post.PostLikes | length}} likes</span>
+							<span type="button" role="button" data-toggle="modal" data-target="#comment{{ post.id }}" class="comment-{{ post.id }}-display badge badge-info" id="{{ post.id }}comments">{{ post.comments | length}} commentaires</span>
+							<br>
+							<a href="{{ path("post_like", {"id" : post.id, "from" : "home"}) }}" class="js-like btn btn-outline-info ">
+								{% if post.isLikedByUser(app.user) %}
+									<i class="fas fa-thumbs-up"></i>
+									Je n'aime plus
+								{% else %}
+									<i class="far fa-thumbs-up"></i>
+									J'aime
+								{% endif %}
+							</a>
+						</div>
+						<div class="card-footer">
+							<form class=" form-row comment-form " style="width: 55em; margin-right: auto; margin-left: auto;" action="{{ path('post_comment', {'id' : post.id, 'from' : 'home'})}}" method="post" aria-labelledby="{{ post.id }}">
+								<div class="form-group col-12">
+									<label>Commentez en tant que {{ app.user.username }}</label>
+									<textarea type="text" class="form-control comment-input" id="{{ post.id }}" name="content" placeholder="Votre commentaire"></textarea>
+								</div>
+								<input type="submit" class="btn btn-outline-primary btn-block" value="Commenter" name="">
+							</form>
+						</div>
+
+					</div>
+					<br>
+					<div id="comment{{ post.id }}" class="modal fade" tabindex="-1" role="dialog">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h3 class="modal-title">Commentaires : <span class="comment-{{ post.id }}-displayN">{{ post.comments|length }}</span></h3>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          <span aria-hidden="true">&times;</span>
+							        </button>
+								</div>
+								<div class="modal-body overflow-auto" id="comments{{ post.id }}" style="height: 30em">
+									{% for comment in post.comments|reverse %}
+										<div class="shadow-lg m-2 p-3">
+											<h6 class="modal-title"><img src="{{ comment.user.avatar }}" class="img-fluid w-25"><br>{{ comment.user.username }}</h6>
+											<br>
+											<p class="lead">
+												{{ comment.content }}
+											</p>
+										</div>
+									{% endfor %}
+								</div>
+								<div class="modal-footer">
+									<form class=" form-row comment-form " style="width: 55em" action="{{ path('post_comment', {'id' : post.id, 'from' : 'home'})}}" method="post" aria-labelledby="{{ post.id }}">
+										<div class="form-group col-8">
+											<textarea type="text" class="form-control comment-input" id="modal{{ post.id }}" name="content" placeholder="Votre commentaire"></textarea>
+										</div>
+										<div class="form-group col-4">
+											<br>
+											<input type="submit" class="btn btn-outline-primary" value="Commenter" name="">
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+
+			{% else %}
+				<p class="lead">Vous n'avez encore rien posté. Vous voulez <a href="{{ path('post') }}">vous y mettre</a> ?</p>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	<script type="text/javascript" src="/assets/js/handlers/LikesHandler.js"></script>
+	<script type="text/javascript" src="/assets/js/handlers/CommentsHandler.js"></script>
+{% endblock %}

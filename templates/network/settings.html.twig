@@ -1,0 +1,140 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Paramètrez votre compte
+{% endblock %} 
+
+
+
+{% block class %}container text-center{% endblock%}
+
+{% block body %}
+	<div class="row">
+		<div class="col">
+			{{ form_start(form) }}
+			<div class="card">
+			<div class="card-header card-header-text card-header-primary">
+				<img id="display" src="{{app.user.avatar}}" class="img-fluid rounded-circle w-25 bg-light">
+				<h2>{{ app.user.username }}</h2>
+				
+					{{ form_row(form.avatar, {
+						'attr' : {
+							'class' : 'd-none'			
+						}
+					}) }}
+					<label for="user_modify_avatar" type="button" class="btn btn-outline-success">Choisir une photo de profil</label>
+				</div>
+				<div class="card-body">
+					<br>
+						<div class="row">
+							<div class="col-lg">
+								{{ form_row(form.username, {'attr' : {'class' : 'form-control'}, 'label' : "Nom d'utilisateur" })}}
+							</div>
+							<div class="col-lg">
+								{{ form_row(form.email, {'attr' : {'class' : 'form-control'} })}}
+							</div>
+							<div class="d-none">
+								{{ form_row(form.password, {'attr' : {'class' : 'd-none', 'placeholder' : 'Mot de passe', 'value' : app.user.password}})}}
+							</div>
+							<div class="d-none">
+								{{ form_row(form.confirmPassword, {'attr' : {'class' : 'd-none', 'placeholder' : "Confirmez votre mot de passe", 'value' : app.user.password}})}}
+							</div>
+						</div>
+						<br>
+						<br>
+						<div class="row">
+							<div class="col">
+								{{ form_row(form.description, {
+									'attr' : {
+										'class' : 'form-control',
+										'placeholder' : "Votre description"
+									}
+								})}}
+							</div>
+						</div>
+						<br>
+						<button class="btn btn-outline-primary btn-block">Enregistrer</button>
+						{{ form_end(form) }}
+						<hr>
+						<br>
+						<h2 align="center">Modifiez votre mot de passe</h2>
+						<br>
+						{{ form_start(pass) }}
+							<div class="row">
+								
+									<div class="col-lg">
+										{{ form_row(pass.password, {
+											'attr' : {
+												'class' : "form-control",
+												'placeholder' : "Votre nouveau mot de passe"
+											},
+											'label' : "Mot de passe"
+										}) }}
+									</div>
+									<div class="col-lg">
+										{{ form_row(pass.confirmPassword, {
+											'attr' : {
+												'class' : "form-control",
+												'placeholder' : "Confirmez votre mot de passe"
+											},
+											'label' : "Confirmation du nouveau mot de passe"
+										}) }}
+									</div>
+							</div>
+							<br>
+							<button class="btn btn-outline-primary btn-block">Modifier</button>
+						{{ form_end(pass) }}
+
+				</div>
+				<br>
+			
+		</div>
+		</div>
+		
+	</div>
+	<div class="text-center p-4 m-3 shadow-lg">
+		<div class="input-group mb-3">
+		  <div class="input-group-prepend">
+		    <i class="far fa-eye"></i>
+		  </div>
+		  <input type="password" readonly="" class="form-control" value="app.user.token">
+		</div>
+	</div>
+	<div class="text-center p-4 m-3 shadow-lg">
+		<div class="dialog" id="dialog"></div>
+		<button class="btn btn-outline-danger" type="button" data-toggle="modal" data-target="#checkUser">Supprimer votre compte</button>
+		<h2>Ici, on croit à la liberté.</h2>
+		<p class="lead">
+			Si vous ne voulez plus utiliser Comin (c'est incompréhensible !) ou que vous avez sur votre compte actuel des publications embarassantes ou que vous avez besoin de disparaître pour une quelconque raison, vous êtes <strong>libre</strong> de le faire. Toutes les données de votre compte (posts, messages, commentaires, votre photo de profil...) disparaîtront de Comin au moment même ou vous validerez la suppression de votre compte.
+		</p>
+	</div>
+	<div class="modal fade" role="dialog" tabindex="-1" id="checkUser">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title">Vérifions qu'il s'agit bien de vous</h3>
+					<button class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p class="lead">Même si Comin défend la possibilité de supprimer et de controller ses données, la suppression de son compte nn'est pas à prendre à la légère. C'est pourquoi vous devez vous identifier avant de procéder à cette action</p>
+					<br>
+					<br>
+					<form id="accountCheck" action="{{ path('user_check') }}" method="post">
+						<div class="form-group">
+							<label>Confirmez votre identité</label>
+							<input type="text" id="password" name="password" class="form-control border-warning"placeholder="Votre mot de passe">
+						</div>
+						<input type="submit" class="btn btn-outline-primary btn-block" name="">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+{% endblock %}
+{% block javascripts %}
+	<script type="text/javascript" src="/assets/js/displayThumb.js"></script>
+	<script type="text/javascript" src="/assets/js/handlers/CheckHandler.js"></script>
+{% endblock %}

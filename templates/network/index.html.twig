@@ -1,0 +1,236 @@
+{% extends 'base.html.twig' %}
+
+
+{% block extra %}
+	<div class="text-inline d-none d-lg-block">
+		<span>{{ app.user.username }}  </span>
+		<a class="bg-transparent" role="button" href="{{ path("user_myaccount") }}" style="border: none">
+			<img src="{{ app.user.avatar}}" alt="" class="d-inline rounded-circle" style="width: 5em">
+		</a>
+	</div>
+	<div class="d-block d-lg-none p-4">
+		<a class="bg-transparent" role="button" href="{{ path("user_myaccount") }}" style="border: none">
+			<img src="{{ app.user.avatar}}" alt="" class="d-inline img-fluid img-thumbnail">
+		</a>
+		<br>
+		<br>
+		<span>{{ app.user.username }} </span>
+	</div>
+{% endblock %}
+
+{% block title %} Votre tableau de bord {% endblock %}
+
+{% block class %}container-fluid w-75{% endblock %}
+
+{% block body %}
+	{% if app.user.avatar == "/pps/default.png" %}
+		<div class="alert alert-warning alert-dismissible fade show" role="alert">
+			La photo de profil de votre compte est toujours celle par défaut... Pensez à la changer dans les paramètres !!
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	{% endif %}
+	<div class="row align-middle">
+		<div id="messages" class="col-4 d-none d-lg-block p-2 m-3 shadow-lg overflow-auto" style="margin-left: 20em; height: 86vh">
+			<h2 class="m-3">Messages
+				 <a href="#" class="float-right" type="button" data-toggle="modal" data-target="#add">
+				 	 <img src="https://image.flaticon.com/icons/svg/1783/1783255.svg" class="img-fluid d-inline" style="width: 1em">
+				 </a>
+			</h2>
+			<ul class="list-group list-group-flush" id="discussions">
+				{% for disc in discs|sort( (a ,b) => a.new <=> b.new) %}
+					{% if disc %}
+						<li class="list-group-item">
+							<a id="toggle{{disc.id}}" onclick="Modal('#modal{{disc.id}}')" class="text-dark toggle" type="button" href="#" data-toggle="modal" data-target="#modal{{disc.id}}">
+								<h3 class="d-inline">
+									{% if disc.user1 == app.user %}
+										{% set user = 1 %}
+										{% set username = disc.user2.username %}
+										{{ disc.user2.username }}
+									{% else %}
+										{% set user = 2 %}
+										{{ disc.user1.username }}
+										{% set username = disc.user1.username %}
+									{% endif %}
+								</h3>
+								<span class="badge badge-info float-right msg-{{ disc.id }}-display">{% if user == 1 %} {{ disc.new }} {% else %} {{ disc.new2 }} {% endif %} Nouveaux messages</span>
+							</a>
+						</li>
+						<div class="modal fade modal-{{disc.id}}-message" tabindex="-1" role="dialog" id="modal{{disc.id}}">
+							<div role="document" class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h2 class="modal-title">{{ username }}</h2>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								          <span aria-hidden="true">&times;</span>
+								        </button>
+									</div>
+									<div class="messages modal-body overflow-auto modal-{{disc.id}}-body" id="messages{{disc.id}}" style="height: 30em">
+										<ul class="list-group" id="modals{{ disc.id }}">
+											{% for msg in disc.messages %}
+												<li class="list-group-item shadow-lg m-3 p-4 ">
+													<strong>{{ msg.sender.username }} : </strong>{{  msg.content}}
+												</li>
+											{% endfor %}
+										</ul>
+									</div>
+									<div class="modal-footer">
+										<form class="form-row w-100 msg-form" action="{{ path('chat', {'id' : disc.id}) }}" method="post" aria-labelledby="{{ disc.id }}">
+											<div class="col-lg-8">
+												<input class="form-control" type="text" name="content" placeholder="Votre message" id="{{ disc.id }}">		
+											</div>
+											<div class="col-lg-4">
+												<input type="submit" class="btn btn-outline-primary btn-block" value="Envoyer" name="">
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+				<div class="modal fade" id="add" tabindex="-1" role="dialog">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title">Nouvelle discussion</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<div class="list-group">
+									{% for follower in app.user.followers %}
+										{% if not (follower.follower in talkWith) %}
+											<a id="newDisc" href="{{ path('chat_new', {'id' : follower.follower.id})}}" class="list-group-item list-group-item-action">{{ follower.follower.username }}</a>
+										{% endif %}
+									{% endfor %}
+								</div>
+								
+							</div>
+							<div class="modal-footer">
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</ul>
+		</div>
+		<div id="posts" align="center" class="col-7 text-center overflow-auto shadow-lg p-3 m-3" style="height: 86vh;">
+			<div class="p-3">
+				<h2>Publications</h2>
+			</div>
+			<br>
+			{% if posts %}
+				{% for post in posts %}
+					<div class="card">
+						<div class="card-header card-header-primary">
+							{% set type = post.type|split("/") %}
+							{% set format = type[1]%}
+							{% if type[0] == "video" %}
+								<video controls="" style="width: 100%"  class="video-js vjs-theme-city" preload="auto" data-setup="{}">
+									<source src="{{ post.path }}" type="video/{{ format }}">
+									Votre navigateur ne semble pas supporter l'élement vidéo ! Désolé...
+								</video>
+							{% elseif type[0] == "image" %}
+								<img class="img-fluid" src="{{ post.path }}">
+
+							{% elseif type[0] == "audio" %}
+									<audio controls="" style="width: 100% !important;">
+										<source src="{{ post.path }}" type="audio/{{ format }}">
+									</audio>
+								{% endif %}
+							
+						</div>
+						<div class="card-body">
+							<h4>{{ post.user.username }}</h4>
+							<p class="lead">{{ post.description }}</p>
+							<span class="like-display badge badge-info" id="{{ post.id }}likes">{{ post.PostLikes | length}} likes</span>
+							<span type="button" role="button" data-toggle="modal" data-target="#comment{{ post.id }}" class="comment-{{ post.id }}-display badge badge-info" id="{{ post.id }}comments">{{ post.comments | length}} commentaires</span>
+							<br>
+							<a href="{{ path("post_like", {"id" : post.id, "from" : "home"}) }}" class="js-like btn btn-outline-info ">
+								{% if post.isLikedByUser(app.user) %}
+									<i class="fas fa-thumbs-up"></i>
+									Je n'aime plus
+								{% else %}
+									<i class="far fa-thumbs-up"></i>
+									J'aime
+								{% endif %}
+							</a>
+						</div>
+						<div class="card-footer">
+							<form class=" form-row comment-form " style="width: 55em" action="{{ path('post_comment', {'id' : post.id, 'from' : 'home'})}}" method="post" aria-labelledby="{{ post.id }}">
+								<div class="form-group col-12">
+									<label>Commentez en tant que {{ app.user.username }}</label>
+									<textarea type="text" class="form-control comment-input" id="{{ post.id }}" name="content" placeholder="Votre commentaire"></textarea>
+								</div>
+								<input type="submit" class="btn btn-outline-primary btn-block" value="Commenter" name="">
+							</form>
+						</div>
+
+					</div>
+					<br>
+					<div id="comment{{ post.id }}" class="modal fade" tabindex="-1" role="dialog">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h3 class="modal-title">Commentaires : <span class="comment-{{ post.id }}-displayN">{{ post.comments|length }}</span></h3>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          <span aria-hidden="true">&times;</span>
+							        </button>
+								</div>
+								<div class="modal-body overflow-auto" id="comments{{ post.id }}" style="height: 30em">
+									{% for comment in post.comments|reverse %}
+										<div class="shadow-lg m-2 p-3">
+											<h6 class="modal-title"><img src="{{ comment.user.avatar }}" class="img-fluid w-25"><br>{{ comment.user.username }}</h6>
+											<br>
+											<p class="lead">
+												{{ comment.content }}
+											</p>
+										</div>
+									{% endfor %}
+								</div>
+								<div class="modal-footer">
+									<form class=" form-row comment-form " style="width: 55em" action="{{ path('post_comment', {'id' : post.id, 'from' : 'home'})}}" method="post" aria-labelledby="{{ post.id }}">
+										<div class="form-group col-8">
+											<textarea type="text" class="form-control comment-input" id="modal{{ post.id }}" name="content" placeholder="Votre commentaire"></textarea>
+										</div>
+										<div class="form-group col-4">
+											<br>
+											<input type="submit" class="btn btn-outline-primary" value="Commenter" name="">
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+
+			{% else %}
+				<p class="lead">Il n'y a pas de posts !! Désolé !</p>
+			{% endif %}			
+		</div>
+	</div>
+
+	
+	
+{% endblock %}
+{% block javascripts %}
+	<script type="text/javascript">
+	function isMobileDevice() {
+		return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+	};
+
+	var posts = document.getElementById('posts');
+	if (isMobileDevice()) {
+		posts.className = "col-12 text-center overflow-auto p-1";
+		posts.style = "height: 86vh; width: 100vw;"
+	}else{
+		document.getElementById('mobileChat').innerHTML = "";
+	}
+
+	</script>
+	<script type="text/javascript" src="/assets/js/handlers/LikesHandler.js"></script>
+	<script type="text/javascript" src="/assets/js/handlers/CommentsHandler.js"></script>
+{% endblock %}
