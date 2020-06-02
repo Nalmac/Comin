@@ -37,9 +37,11 @@ class PostController extends AbstractController
             array_push($targets, $url);
         }
 
+        $notif = "${$this->getUser()->getUsername()} a posté ! Soyez le premier à commenter son post !";
+
         $update = new Update(
         	'http://realtime/topics/posts',
-        	json_encode(['notif' => 'post']),
+        	json_encode(['notif' => $notif]),
             $targets
         );
 

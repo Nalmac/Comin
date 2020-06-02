@@ -1,4 +1,4 @@
-	const url = new URL('http://192.168.0.185:3000/.well-known/mercure');
+	const url = new URL('http://192.168.1.39:3000/.well-known/mercure');
 	url.searchParams.append('topic', 'http://realtime/topics/posts');
 	url.searchParams.append('topic', 'http://realtime/users/subs');
 	url.searchParams.append('topic', 'http://realtime/posts/like');
