@@ -56,11 +56,35 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/home/test", name="home_test")
+     */
+    public function test()
+    {
+        return $this->json([
+            "username" => $this->getUser()->getUsername()
+        ]);
+    }
+
+    /**
     * @Route("/home/logout", name="home_logout")
     */
     public function logout()
     {
     	# code...
+    }
+
+    /**
+     * @Route("/home/json_login", name="json_login", methods={"POST"})
+    */
+
+    public function jsonLogin(Request $request)
+    {
+        $user = $this->getUser();
+
+        return $this->json([
+            "username" => $user->getUsername(),
+            "roles" => $user->getRoles()
+        ]);
     }
 
     /**

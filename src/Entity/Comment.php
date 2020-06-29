@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
+ * @ApiResource()
  */
 class Comment
 {

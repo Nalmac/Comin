@@ -11,7 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class MobileUserController extends AbstractController
-{
+{   
+
     /**
      * @Route("/mobile/login/{email}/{password}", name="mobile_login")
      */
