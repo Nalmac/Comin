@@ -46,6 +46,10 @@ class MobileUserController extends AbstractController
     public function authSession(User $user, $session_id)
     {
         $server_session = $user->getUsername() . $user->getPassword();
+        if ($server_session == $session_id) {
+            return $this->json(["status" => True]);
+        }
+
     }
 
     /**
