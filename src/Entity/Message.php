@@ -6,10 +6,13 @@ use App\Entity\Disc;
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MessageRepository")
- * @ApiResource()
+ * @ApiResource(
+ *      normalizationContext={"groups"={"read"}}
+ * )
  */
 class Message
 {
@@ -17,6 +20,7 @@ class Message
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("read")
      */
     private $id;
 
@@ -27,11 +31,13 @@ class Message
     private $disc;
 
     /**
+     * @Groups("read")
      * @ORM\Column(type="text")
      */
     private $content;
 
     /**
+     * @Groups("read")
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */

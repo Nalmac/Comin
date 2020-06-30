@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -16,7 +17,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *   fields = {"email"},
  *   message = "L'email entré est déjà utilisé"
  *)
- * @ApiResource()
+ * @ApiResource(
+ *      normalizationContext={"groups"={"read"}}
+ * )
  */
 class User implements UserInterface
 {
@@ -24,11 +27,13 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("read")
      */
     private $username;
 
@@ -51,6 +56,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("read")
      */
     private $avatar;
 
@@ -81,6 +87,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("read")
      */
     private $description;
 

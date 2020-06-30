@@ -6,10 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DiscRepository")
- * @ApiResource()
+ * @ApiResource(
+ *      normalizationContext={"groups"={"read"}}
+ * )
  */
 class Disc
 {
@@ -17,33 +20,39 @@ class Disc
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("read")
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="discs")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("read")
      */
     private $user1;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="discs2")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("read")
      */
     private $user2;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="disc", orphanRemoval=true)
+     * @Groups("read")
      */
     private $messages;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups("read")
      */
     private $new;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups("read")
      */
     private $new2;
 
