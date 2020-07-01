@@ -83,7 +83,8 @@ class HomeController extends AbstractController
 
         return $this->json([
             "username" => $user->getUsername(),
-            "roles" => $user->getRoles()
+            "roles" => $user->getRoles(),
+            "id" => $user->getId()
         ]);
     }
 

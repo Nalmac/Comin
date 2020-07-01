@@ -5,11 +5,17 @@ namespace App\Entity;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
- * @ApiResource()
+ * @ApiResource(
+ *      normalizationContext={"groups"={"read"}}
+ * )
+ * @ApiFilter(SearchFilter::class, properties={"post": "exact"})
  */
 class Comment
 {
@@ -17,6 +23,7 @@ class Comment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("read")
      */
     private $id;
 
@@ -28,12 +35,14 @@ class Comment
 
     /**
      * @ORM\Column(type="text")
+     * @Groups("read")
      */
     private $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("read")
      */
     private $user;
 
