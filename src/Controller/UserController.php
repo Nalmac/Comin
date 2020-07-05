@@ -81,7 +81,7 @@ class UserController extends AbstractController
     {
         $update = new Update(
             "http://realtime/users/subs",
-            json_encode(['notif' => "{$this->getUser()->getUsername()} s'est abonné à votre profil !"]),
+            json_encode(['notif' => "{$this->getUser()->getUsername()} s'est abonné à votre profil !", "use" => "follow"]),
             ["http://realtime/user/{$followed->getId()}"]
 
         );

@@ -36,7 +36,7 @@ class LikeHandler
 
 				$update = new Update(
 					"http://realtime/posts/like",
-					json_encode(['notif' => "{$this->user->getUsername()} a aimé votre publication"]),
+					json_encode(['notif' => "{$this->user->getUsername()} a aimé votre publication", "use" => "like"]),
 					["http://realtime/user/{$postUserId}"]
 				);
 
@@ -48,7 +48,7 @@ class LikeHandler
 
 				$generalUpdate = new Update(
 					"http://realtime/posts/like",
-					json_encode(['notif' => 'Like', 'post' => $this->post->getId(), 'likes' => $likeRepo->count(['post' => $this->post])])
+					json_encode(['notif' => 'Like', "use" => null,'post' => $this->post->getId(), 'likes' => $likeRepo->count(['post' => $this->post])])
 				);
 
 				$bus->dispatch($update);

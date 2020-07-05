@@ -5,11 +5,15 @@ namespace App\Entity;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostLikeRepository")
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"read"}})
+ * @ApiFilter(SearchFilter::class, properties={"user":"exact", "post":"exact"})
  */
 class PostLike
 {
@@ -29,6 +33,7 @@ class PostLike
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("read")
      */
     private $user;
 

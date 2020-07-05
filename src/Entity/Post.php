@@ -49,6 +49,7 @@ class Post
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("read")
      */
     private $user;
 
@@ -59,6 +60,7 @@ class Post
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\PostLike", mappedBy="post", orphanRemoval=true)
+     * @Groups("read")
      */
     private $postLikes;
 

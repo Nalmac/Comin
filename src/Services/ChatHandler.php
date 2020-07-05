@@ -43,7 +43,7 @@ class ChatHandler
 
 			$update = new Update(
 				"http://realtime/chat/msg",
-				json_encode(["notif" => "message", "message" => ['user' => $message->getSender()->getUsername(), 'content' => $message->getContent(), 'disc' => $message->getDisc()->getId(), "new" => $new]]),
+				json_encode(["notif" => "message", "use" => "chat_message","message" => ['user' => $message->getSender()->getUsername(), 'content' => $message->getContent(), 'disc' => $message->getDisc()->getId(), "new" => $new]]),
 				["http://realtime/user/{$target->getId()}"]
 			);
 

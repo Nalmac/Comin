@@ -4,10 +4,13 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Services\MercureCookieGenerator;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
@@ -56,13 +59,16 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/home/test", name="home_test")
+     * @Route("/home/get_user_id", name="home_user_id")
      */
-    public function test()
+    public function test(SessionInterface $session, MercureCookieGenerator $cookieGenerator)
     {
-        return $this->json([
-            "username" => $this->getUser()->getUsername()
-        ]);
+        $user = $this->getUser();
+
+        $response = $this->json($user);
+        $response->headers->set('set-cookie', $cookieGenerator->generate($this->getUser()));
+
+        return $response;
     }
 
     /**
@@ -77,14 +83,16 @@ class HomeController extends AbstractController
      * @Route("/home/json_login", name="json_login", methods={"POST"})
     */
 
-    public function jsonLogin(Request $request)
+    public function jsonLogin(Request $request, SessionInterface $session)
     {
         $user = $this->getUser();
 
         return $this->json([
+            "registered" => true,
             "username" => $user->getUsername(),
             "roles" => $user->getRoles(),
-            "id" => $user->getId()
+            "id" => $user->getId(),
+            "session" => $session->getId()
         ]);
     }
 

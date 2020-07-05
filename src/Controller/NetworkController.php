@@ -94,7 +94,7 @@ class NetworkController extends AbstractController
 
                 if (in_array($ext, $auth)) {
                     $pictureFileName = $uploader->upload($profilePic);
-                    $user->setAvatar('/pps/' . $pictureFileName);
+                    $user->setAvatar('/media/' . $pictureFileName);
                 }
 	
     		}
